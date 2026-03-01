@@ -1,16 +1,6 @@
 services:
-  - type: web
-    name: editex-api
-    env: node
-    rootDir: backend
-    buildCommand: npm ci
-    startCommand: npm start
-    healthCheckPath: /api/health
-    autoDeploy: true
-
-  - type: web
+  - type: static_site
     name: editex-web
-    env: static
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
