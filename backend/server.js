@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 
@@ -30,10 +30,12 @@ app.post('/api/compile', (req, res) => {
 
   fs.writeFileSync(texFile, latex);
 
-  // Use pdflatex for compilation
-  const cmd = `cd "${tmpDir}" && pdflatex -interaction=nonstopmode document.tex`;
-  
-  exec(cmd, { timeout: 30000 }, (error, stdout, stderr) => {
+  // Use pdflatex for compilation (execFile avoids shell injection)
+  execFile(
+    'pdflatex',
+    ['-interaction=nonstopmode', '-output-directory', tmpDir, texFile],
+    { timeout: 30000 },
+    (error, stdout, stderr) => {
     if (fs.existsSync(pdfFile)) {
       const pdfBuffer = fs.readFileSync(pdfFile);
       // Clean up
@@ -63,8 +65,10 @@ app.post('/api/download-latex', (req, res) => {
   res.send(latex);
 });
 
-app.listen(PORT, () => {
-  console.log(`Editex backend running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Editex backend running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
