@@ -3,7 +3,6 @@ services:
     name: editex-api
     env: node
     rootDir: backend
-    plan: free
     buildCommand: npm ci
     startCommand: npm start
     healthCheckPath: /api/health
@@ -13,7 +12,6 @@ services:
     name: editex-web
     env: static
     rootDir: frontend
-    plan: free
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     autoDeploy: true
