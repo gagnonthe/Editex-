@@ -75,19 +75,22 @@ function serializeTableRow(node) {
 
 /**
  * Escapes special LaTeX characters in plain text.
+ * Uses a single-pass replacement to avoid double-escaping.
  */
 export function escapeLatex(text) {
-  return text
-    .replace(/\\/g, '\\textbackslash{}')
-    .replace(/&/g, '\\&')
-    .replace(/%/g, '\\%')
-    .replace(/\$/g, '\\$')
-    .replace(/#/g, '\\#')
-    .replace(/_/g, '\\_')
-    .replace(/\{/g, '\\{')
-    .replace(/\}/g, '\\}')
-    .replace(/~/g, '\\textasciitilde{}')
-    .replace(/\^/g, '\\textasciicircum{}');
+  const SPECIAL_CHAR_MAP = {
+    '\\': '\\textbackslash{}',
+    '&': '\\&',
+    '%': '\\%',
+    '$': '\\$',
+    '#': '\\#',
+    '_': '\\_',
+    '{': '\\{',
+    '}': '\\}',
+    '~': '\\textasciitilde{}',
+    '^': '\\textasciicircum{}',
+  };
+  return text.replace(/[\\&%$#_{}~^]/g, (char) => SPECIAL_CHAR_MAP[char] ?? char);
 }
 
 /**
