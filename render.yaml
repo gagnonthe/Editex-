@@ -1,6 +1,7 @@
 services:
-  - type: static_site
+  - type: web
     name: editex-web
+    env: static
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
