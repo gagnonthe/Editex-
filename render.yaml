@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: editex-api
+    env: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+  - type: web
+    name: editex-web
+    env: static
+    rootDir: frontend
+    plan: free
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    autoDeploy: true
+    envVars:
+      - key: VITE_BACKEND_URL
+        sync: false

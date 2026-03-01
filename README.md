@@ -231,6 +231,43 @@ cd frontend
 npm run build
 ```
 
+## Deploy on Render
+
+This repository includes a `render.yaml` Blueprint for one-click deployment.
+
+### Option A — Blueprint (recommended)
+
+1. Push your branch to GitHub.
+2. In Render, click **New +** → **Blueprint**.
+3. Select this repository.
+4. Render will create:
+   - `editex-api` (Node backend)
+   - `editex-web` (static Vite frontend)
+5. In the `editex-web` service settings, set:
+   - `VITE_BACKEND_URL=https://<your-backend-service>.onrender.com`
+6. Redeploy `editex-web` after saving the env var.
+
+### Option B — Manual setup (2 services)
+
+- **Backend (Web Service)**
+  - Root Directory: `backend`
+  - Build Command: `npm ci`
+  - Start Command: `npm start`
+  - Health Check Path: `/api/health`
+
+- **Frontend (Static Site)**
+  - Root Directory: `frontend`
+  - Build Command: `npm ci && npm run build`
+  - Publish Directory: `dist`
+  - Environment variable: `VITE_BACKEND_URL=https://<your-backend-service>.onrender.com`
+
+### Important note about PDF compilation
+
+The `/api/compile` endpoint requires `pdflatex`. On Render, if `pdflatex` is not installed,
+the app still works but PDF export returns `503` with a clear message.
+
+If you want PDF export in production, deploy the backend with a Docker image that installs TeX Live.
+
 ## License
 
 MIT
